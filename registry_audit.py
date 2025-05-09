@@ -1,15 +1,15 @@
 # === INSTALLATION & USAGE ===
 # 1. Install dependencies:
-#    pip install winreg-alt tabulate
+#    pip install tabulate
 # 2. Save this script as registry_audit.py
 # 3. Run it with:
 #    python registry_audit.py
 
 """
-This program audits **critical Windows Registry keys** commonly abused by malware for persistence.
+This program audits critical Windows Registry keys commonly abused by malware for persistence.
 It checks for suspicious or unexpected entries inside known auto-start and service keys.
 
-It complements your earlier scripts (Service Checker & EXE Path Checker) by focusing on **Registry abuse detection**.
+It complements your earlier scripts (Service Checker & EXE Path Checker) by focusing on Registry abuse detection.
 """
 
 import winreg as reg
@@ -61,7 +61,7 @@ def read_registry_key(root, path):
         return []
     return results
 
-def audit_registry():
+def audit_registry(export_file=None):
     all_findings = []
 
     for item in AUDIT_KEYS:
@@ -73,9 +73,16 @@ def audit_registry():
     if all_findings:
         print("\n[+] Suspicious or existing entries found:")
         headers = ["Category", "Registry Path", "Value Name", "Data"]
-        print(tabulate(all_findings, headers=headers, tablefmt="grid"))
+        table = tabulate(all_findings, headers=headers, tablefmt="grid")
+        print(table)
+
+        if export_file:
+            with open(export_file, 'w', encoding='utf-8') as f:
+                f.write(table)
+            print(f"\n[+] Findings exported to {export_file}")
     else:
         print("\n[OK] No suspicious entries found in monitored Registry keys.")
 
 if __name__ == "__main__":
-    audit_registry()
+    # To export results to a text file, change filename below
+    audit_registry(export_file="registry_audit_results.txt")
