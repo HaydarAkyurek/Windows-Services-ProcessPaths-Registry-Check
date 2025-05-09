@@ -1,7 +1,11 @@
 # === INSTALLATION & USAGE ===
-# 1. Save this script as enhanced_service_checker.py
-# 2. Run it with:
+# 1. Save this script as `enhanced_service_checker.py`
+# 2. Open a Command Prompt window.
+# 3. Navigate to the directory where the script is saved using the 'cd' command.
+#    For example: cd C:\path\to\script
+# 4. Run the script with the following command:
 #    python enhanced_service_checker.py
+# 5. The GUI will appear where you can scan and save extra services on your Windows system.
 
 import subprocess
 import os
@@ -26,7 +30,6 @@ def default_services():
 # ----------------------
 # Functions to get current services and details
 # ----------------------
-
 def get_current_services():
     services = set()
     result = subprocess.run(["sc", "query", "type=", "service", "state=", "all"], capture_output=True, text=True)
@@ -39,7 +42,6 @@ def get_current_services():
 
 # NOTE: We use SERVICE_NAME as the primary identifier because **DisplayName is not unique**.
 # Multiple services can have identical or similar display names, but SERVICE_NAME is always unique.
-
 
 def get_service_details(service_name):
     result = subprocess.run(["sc", "qc", service_name], capture_output=True, text=True)
@@ -65,7 +67,6 @@ def get_service_details(service_name):
 # ----------------------
 # GUI Functions
 # ----------------------
-
 def scan_services():
     current = get_current_services()
     extras = current - default_services()
